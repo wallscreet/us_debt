@@ -1,8 +1,6 @@
 import feedparser
 import re
 from dataclasses import dataclass
-from typing import Optional
-import time
 from datetime import datetime
 from zoneinfo import ZoneInfo
 
@@ -88,7 +86,7 @@ def display_debt_clock(entries: list[DebtEntry]):
         print(f"  Date: {entry.date}")
         print(f"    Debt Held by the Public:       {format_currency(entry.public_debt)}")
         print(f"    Intragovernmental Holdings:    {format_currency(entry.intragovernmental)}")
-        print(f"    Total Public Debt Outstanding: {format_currency(entry.total_debt)}")
+        print(f"    Total Debt Outstanding:        {format_currency(entry.total_debt)}")
         print(f"    Published:              {entry.pub_date}")
         print(f"  {sep_single}")
 
@@ -114,7 +112,7 @@ def display_math(entries: list[DebtEntry]):
     print(f"  Debt Held by the Public:       {debt_held_by_public_sign} {format_currency(debt_held_by_public_diff)}")
     print(f"  Intragovernmental Holdings:    {intragovernmental_sign} {format_currency(intragovernmental_diff)}")
     print(f"  Total Public Debt Outstanding: {total_debt_sign} {format_currency(total_debt_diff)}")
-    print(f"\n  Debt Accumulation Rate:        {total_debt_sign} {format_currency(total_debt_diff / 24)}/hr")
+    print(f"\n  Debt Accumulation Rate:        {total_debt_sign} {format_currency(total_debt_diff / (days_elapsed * 24))}/hr")
     print(f"  {sep_double}")
     print("\n")
 
