@@ -86,25 +86,35 @@ def display_debt_clock(entries: list[DebtEntry]):
     
     for entry in entries:
         print(f"  Date: {entry.date}")
-        print(f"    Debt Held by the Public: {format_currency(entry.public_debt)}")
-        print(f"    Intragovernmental Holdings: {format_currency(entry.intragovernmental)}")
+        print(f"    Debt Held by the Public:       {format_currency(entry.public_debt)}")
+        print(f"    Intragovernmental Holdings:    {format_currency(entry.intragovernmental)}")
         print(f"    Total Public Debt Outstanding: {format_currency(entry.total_debt)}")
-        print(f"    Published: {entry.pub_date}")
+        print(f"    Published:              {entry.pub_date}")
         print(f"  {sep_single}")
 
 
 def display_math(entries: list[DebtEntry]):
     print(f"  {sep_single}")
-    print("  Day Over Day Diffs")
+    print("  Debt Accumulated")
     print(f"  {sep_single}")
 
     debt_held_by_public_diff = entries[0].public_debt - entries[1].public_debt
+    debt_held_by_public_sign = "+" if debt_held_by_public_diff >= 0 else "-"
     intragovernmental_diff = entries[0].intragovernmental - entries[1].intragovernmental
+    intragovernmental_sign = "+" if intragovernmental_diff >= 0 else "-"
     total_debt_diff = entries[0].total_debt - entries[1].total_debt
+    total_debt_sign = "+" if total_debt_diff >= 0 else "-"
 
-    print(f"  Debt Held by the Public: {format_currency(debt_held_by_public_diff)}")
-    print(f"  Intragovernmental Holdings: {format_currency(intragovernmental_diff)}")
-    print(f"  Total Public Debt Outstanding: {format_currency(total_debt_diff)}")
+    date_format = "%m/%d/%Y"
+    date0 = datetime.strptime(entries[0].date, date_format).date()
+    date1 = datetime.strptime(entries[1].date, date_format).date()
+    days_elapsed = (date0 - date1).days
+
+    print(f"  Days Elapsed:                    {days_elapsed}")
+    print(f"  Debt Held by the Public:       {debt_held_by_public_sign} {format_currency(debt_held_by_public_diff)}")
+    print(f"  Intragovernmental Holdings:    {intragovernmental_sign} {format_currency(intragovernmental_diff)}")
+    print(f"  Total Public Debt Outstanding: {total_debt_sign} {format_currency(total_debt_diff)}")
+    print(f"\n  Debt Accumulation Rate:        {total_debt_sign} {format_currency(total_debt_diff / 24)}/hr")
     print(f"  {sep_double}")
     print("\n")
 
