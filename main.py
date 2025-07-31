@@ -97,11 +97,8 @@ def display_math(entries: list[DebtEntry]):
     print(f"  {sep_single}")
 
     debt_held_by_public_diff = entries[0].public_debt - entries[1].public_debt
-    debt_held_by_public_sign = "+" if debt_held_by_public_diff >= 0 else "-"
     intragovernmental_diff = entries[0].intragovernmental - entries[1].intragovernmental
-    intragovernmental_sign = "+" if intragovernmental_diff >= 0 else "-"
     total_debt_diff = entries[0].total_debt - entries[1].total_debt
-    total_debt_sign = "+" if total_debt_diff >= 0 else "-"
 
     date_format = "%m/%d/%Y"
     date0 = datetime.strptime(entries[0].date, date_format).date()
