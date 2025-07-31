@@ -108,11 +108,11 @@ def display_math(entries: list[DebtEntry]):
     date1 = datetime.strptime(entries[1].date, date_format).date()
     days_elapsed = (date0 - date1).days
 
-    print(f"  Days Elapsed:                    {days_elapsed}")
-    print(f"  Debt Held by the Public:       {debt_held_by_public_sign} {format_currency(debt_held_by_public_diff)}")
-    print(f"  Intragovernmental Holdings:    {intragovernmental_sign} {format_currency(intragovernmental_diff)}")
-    print(f"  Total Public Debt Outstanding: {total_debt_sign} {format_currency(total_debt_diff)}")
-    print(f"\n  Debt Accumulation Rate:        {total_debt_sign} {format_currency(total_debt_diff / (days_elapsed * 24))}/hr")
+    print(f"  Days Elapsed:                     {days_elapsed}")
+    print(f"  Debt Held by the Public:          {format_currency(debt_held_by_public_diff)}")
+    print(f"  Intragovernmental Holdings:       {format_currency(intragovernmental_diff)}")
+    print(f"  Total Public Debt Outstanding:    {format_currency(total_debt_diff)}")
+    print(f"\n  Debt Accumulation Rate:           {format_currency(total_debt_diff / (days_elapsed * 24))} /hr")
     print(f"  {sep_double}")
     print("\n")
 
