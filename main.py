@@ -3,6 +3,9 @@ import re
 from dataclasses import dataclass
 from datetime import datetime
 from zoneinfo import ZoneInfo
+import os
+import json
+from pathlib import Path
 
 
 @dataclass
@@ -114,12 +117,52 @@ def display_math(entries: list[DebtEntry]):
     print("\n")
 
 
+def sync_debt_data_to_json(entries: list[DebtEntry], base_dir="debt_data_json"):
+        """
+        Sync the debt data to a JSON file.
+        Prevents duplication by comparing dates.
+        """
+        os.makedirs(base_dir, exist_ok=True)
+        json_path = Path(base_dir) / "debt_data.json"
+
+        # Load existing data or initialize structure
+        if json_path.exists():
+            with open(json_path, "r") as f:
+                data = json.load(f)
+        else:
+            data = []
+
+        # Deduplication check based on date
+        existing_dates = {entry['date'] for entry in data}
+        
+        for entry in entries:
+            if entry.date in existing_dates:
+                print(f"⚠️ Entry for {entry.date} already exists. Skipping.")
+                continue
+            
+            cleaned_entry = {
+                "date": entry.date,
+                "public_debt": entry.public_debt,
+                "intragovernmental": entry.intragovernmental,
+                "total_debt": entry.total_debt,
+                "pub_date": entry.pub_date
+            }
+            data.append(cleaned_entry)
+
+        # Save to JSON
+        with open(json_path, "w") as f:
+            json.dump(data, f, indent=2, ensure_ascii=False)
+
+        print(f"✔️ Synced debt data to {json_path}")
+
+
 def main():
     # Fetch the most recent two posts
-    entries = fetch_debt_data("https://treasurydirect.gov/NP_WS/debt/feeds/recent")
+    entries = fetch_debt_data("https://treasurydirect.gov/NP_WS/debt/feeds/recent", num_posts=30)
+    sync_debt_data_to_json(entries)
     
-    display_debt_clock(entries)
-    display_math(entries)
+    display_debt_clock(entries[:2])
+    display_math(entries[:2])
 
 
 if __name__ == "__main__":
